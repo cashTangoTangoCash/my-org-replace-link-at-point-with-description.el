@@ -1,0 +1,1 @@
+can the function report to the user how many links it operated on?  it would be nice if *Messages* gave the before and after of each link operated on

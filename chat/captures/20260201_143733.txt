@@ -1,21 +1,12 @@
-;; Replace org links with their descriptions
-;; Based on: https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-remove-a-link
-;;
-;; Usage examples:
-;; - Place cursor on a link and call the function to unlink it
-;; - Select a region containing multiple links to unlink all of them
-;;
-;; What you'll see in *Messages*:
-;;
-;; For a single link:
-;;   Replaced: [[https://example.com][Example Site]] → Example Site
-;;
-;; For multiple links in a region:
-;;   Link 1: [[https://example.com][Example]] → Example
-;;   Link 2: [[https://gnu.org][GNU]] → GNU  
-;;   Link 3: [[https://emacs.org]] → https://emacs.org
-;;   Replaced 3 links
+Good catch! **No, that content does NOT belong in your .el file.**
 
+That section is just documentation/examples I wrote to explain what you'll see when you run the function. It's markdown formatting for this conversation.
+
+## What to copy into your .el file:
+
+**Only copy the actual elisp code** - everything between the first set of triple backticks with `elisp`:
+
+```elisp
 (defun my/org-replace-link-by-link-description (&optional beg end)
   "Replace org link(s) by description or address.
 With region active, replace all links in region."
@@ -62,5 +53,6 @@ With region active, replace all links in region."
    ;; Case 3: Not on a link - inform user
    (t
     (message "Not on an org link"))))
+```
 
-(provide 'my-org-replace-link-at-point-with-description)
+That's it! Everything else was just my explanatory text for you to read here.

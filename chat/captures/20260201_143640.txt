@@ -1,0 +1,38 @@
+Absolutely! Here's the enhanced version with `atomic-change-group` added:
+
+```elisp
+(defun my/org-replace-link-by-link-description (&optional beg end)
+  "Replace org link(s) by description or address.
+With region active, replace all links in region."
+  (interactive (when (use-region-p)
+                 (list (region-beginning) (region-end))))
+  (if (and beg end)
+      ;; Multiple links in region
+      (save-excursion
+        (atomic-change-group
+          (goto-char beg)
+          (while (re-search-forward org-link-bracket-re end t)
+            (replace-match
+             (or (match-string-no-properties 2)
+                 (match-string-no-properties 1))))))
+    ;; Single link at point
+    (if (org-in-regexp org-link-bracket-re 1)
+        (save-excursion
+          (atomic-change-group
+            (let ((remove (list (match-beginning 0) (match-end 0)))
+                  (description
+                   (if (match-end 2) 
+                       (org-match-string-no-properties 2)
+                     (org-match-string-no-properties 1))))
+              (apply 'delete-region remove)
+              (insert description))))
+      (message "Not on an org link"))))
+```
+
+## Key changes:
+
+1. **Region case**: Wrapped the entire `goto-char` + `while` loop in `atomic-change-group` so all link replacements in the region undo as one operation
+
+2. **Single link case**: Same as before - wraps both the deletion and insertion
+
+Now whether you're unlinking one link or ten, a single undo will revert all the changes!

@@ -1,3 +1,6 @@
+Great question! Here's how to properly comment it for your .el file:
+
+```elisp
 ;; Replace org links with their descriptions
 ;; Based on: https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-remove-a-link
 ;;
@@ -62,5 +65,13 @@ With region active, replace all links in region."
    ;; Case 3: Not on a link - inform user
    (t
     (message "Not on an org link"))))
+```
 
-(provide 'my-org-replace-link-at-point-with-description)
+## Key points:
+
+1. **`;;` for comment lines** - Each line starts with `;;` (double semicolon)
+2. **Header comments** - Explain what the code does and provide usage examples
+3. **Inline comments** - Already in the code with single `;` after code or `;;` for case labels
+4. **Docstring** - The string right after `defun` that describes the function
+
+This follows standard Emacs Lisp commenting conventions!

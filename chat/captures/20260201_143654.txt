@@ -1,0 +1,1 @@
+when I look at your last code (briefly), I find the logic hard to follow, as there are lots of parenthesis.  I know the 'computer' finds the parenthesis wonderfully clear and precise, but I don't!

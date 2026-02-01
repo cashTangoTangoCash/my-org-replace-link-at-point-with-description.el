@@ -1,0 +1,57 @@
+Yes, a few enhancements come to mind:
+
+1. **Better error handling** - Currently, if you're not on a link, nothing happens silently. You could add user feedback:
+
+```elisp
+(defun my/org-replace-link-by-link-description ()
+  "Replace an org link by its description or if empty its address"
+  (interactive)
+  (if (org-in-regexp org-link-bracket-re 1)
+      (save-excursion
+        (let ((remove (list (match-beginning 0) (match-end 0)))
+              (description
+               (if (match-end 2) 
+                   (org-match-string-no-properties 2)
+                 (org-match-string-no-properties 1))))
+          (apply 'delete-region remove)
+          (insert description)))
+    (message "Not on an org link")))  ; Added feedback
+```
+
+2. **Region support** - Allow unlinking multiple links at once:
+
+```elisp
+(defun my/org-replace-link-by-link-description (&optional beg end)
+  "Replace org link(s) by description or address.
+With region active, replace all links in region."
+  (interactive (when (use-region-p)
+                 (list (region-beginning) (region-end))))
+  (if (and beg end)
+      (save-excursion
+        (goto-char beg)
+        (while (re-search-forward org-link-bracket-re end t)
+          (replace-match
+           (or (match-string-no-properties 2)
+               (match-string-no-properties 1)))))
+    ;; Single link at point
+    (if (org-in-regexp org-link-bracket-re 1)
+        (save-excursion
+          (let ((remove (list (match-beginning 0) (match-end 0)))
+                (description
+                 (if (match-end 2) 
+                     (org-match-string-no-properties 2)
+                   (org-match-string-no-properties 1))))
+            (apply 'delete-region remove)
+            (insert description)))
+      (message "Not on an org link"))))
+```
+
+3. **Undo as single operation** - Wrap in `atomic-change-group` so undo reverts the whole operation:
+
+```elisp
+(atomic-change-group
+  (apply 'delete-region remove)
+  (insert description))
+```
+
+Would any of these be useful for your workflow?

@@ -1,0 +1,30 @@
+Excellent question! This gets at a fundamental aspect of how Emacs undo works.
+
+## The short answer
+
+Emacs doesn't track undo by "function calls" - it tracks undo by **individual buffer modifications**. Each `delete-region`, `insert`, `replace-match`, etc. creates its own undo entry by default.
+
+## Why this matters
+
+When you call an interactive command, Emacs doesn't automatically know "these modifications should be treated as one logical operation." It just sees:
+
+1. Modification 1: delete text from position A to B
+2. Modification 2: insert text at position A
+3. Modification 3: delete text from position C to D
+4. (etc.)
+
+Each gets its own undo boundary unless you explicitly group them.
+
+## The exception: simple cases
+
+Emacs *does* have some heuristics. For example:
+- Continuous typing creates grouped undo entries (you don't undo character-by-character)
+- Simple single-modification commands often work as expected
+
+But for commands with **multiple distinct buffer modifications** (like delete + insert, or multiple replacements in a loop), you need `atomic-change-group` to tell Emacs "treat all of these as one undoable unit."
+
+## Without atomic-change-group in the region version
+
+If you unlink 5 links in a region without `atomic-change-group`, you might need to press undo 5 times (or more) to restore all the original links. With it, one undo restores everything.
+
+That's why it's considered a best practice for multi-step buffer modifications in interactive commands!

@@ -1,0 +1,1 @@
+undo does seem to undo it all in one shot.  I ran the function on a region containing 3 links and then undid it all at once with C-x u

@@ -1,21 +1,6 @@
-;; Replace org links with their descriptions
-;; Based on: https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-remove-a-link
-;;
-;; Usage examples:
-;; - Place cursor on a link and call the function to unlink it
-;; - Select a region containing multiple links to unlink all of them
-;;
-;; What you'll see in *Messages*:
-;;
-;; For a single link:
-;;   Replaced: [[https://example.com][Example Site]] → Example Site
-;;
-;; For multiple links in a region:
-;;   Link 1: [[https://example.com][Example]] → Example
-;;   Link 2: [[https://gnu.org][GNU]] → GNU  
-;;   Link 3: [[https://emacs.org]] → https://emacs.org
-;;   Replaced 3 links
+Great idea! Here's the enhanced version with detailed reporting:
 
+```elisp
 (defun my/org-replace-link-by-link-description (&optional beg end)
   "Replace org link(s) by description or address.
 With region active, replace all links in region."
@@ -37,7 +22,7 @@ With region active, replace all links in region."
               (setq count (1+ count))
               (message "Link %d: [[%s]] → %s" 
                        count 
-                       (substring original 2 -2)
+                       (substring original 2 -2)  ; Remove [[ and ]]
                        description)))
           (message "Replaced %d link%s" 
                    count 
@@ -56,11 +41,33 @@ With region active, replace all links in region."
           (delete-region link-start link-end)
           (insert description)
           (message "Replaced: [[%s]] → %s" 
-                   (substring original 2 -2)
+                   (substring original 2 -2)  ; Remove [[ and ]]
                    description)))))
    
    ;; Case 3: Not on a link - inform user
    (t
     (message "Not on an org link"))))
+```
 
-(provide 'my-org-replace-link-at-point-with-description)
+## What you'll see in *Messages*:
+
+**For a single link:**
+```
+Replaced: [[https://example.com][Example Site]] → Example Site
+```
+
+**For multiple links in a region:**
+```
+Link 1: [[https://example.com][Example]] → Example
+Link 2: [[https://gnu.org][GNU]] → GNU  
+Link 3: [[https://emacs.org]] → https://emacs.org
+Replaced 3 links
+```
+
+The messages show:
+- The original link (without the outer `[[` and `]]`)
+- The arrow `→` 
+- What it was replaced with
+- A count summary at the end for multiple links
+
+This makes it easy to review what happened and catch any unexpected results!

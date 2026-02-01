@@ -1,0 +1,46 @@
+You're absolutely right! Lisp's nested parentheses can be hard to follow. Let me rewrite it with better structure and comments:
+
+```elisp
+(defun my/org-replace-link-by-link-description (&optional beg end)
+  "Replace org link(s) by description or address.
+With region active, replace all links in region."
+  (interactive (when (use-region-p)
+                 (list (region-beginning) (region-end))))
+  
+  (cond
+   ;; Case 1: Region is active - replace all links in region
+   ((and beg end)
+    (save-excursion
+      (atomic-change-group
+        (goto-char beg)
+        (while (re-search-forward org-link-bracket-re end t)
+          (let ((description (or (match-string-no-properties 2)
+                                 (match-string-no-properties 1))))
+            (replace-match description))))))
+   
+   ;; Case 2: Point is on a link - replace just this link
+   ((org-in-regexp org-link-bracket-re 1)
+    (save-excursion
+      (atomic-change-group
+        (let* ((link-start (match-beginning 0))
+               (link-end (match-end 0))
+               (description (if (match-end 2)
+                                (org-match-string-no-properties 2)
+                              (org-match-string-no-properties 1))))
+          (delete-region link-start link-end)
+          (insert description)))))
+   
+   ;; Case 3: Not on a link - inform user
+   (t
+    (message "Not on an org link"))))
+```
+
+## Key readability improvements:
+
+1. **`cond` instead of nested `if`** - Makes the three cases explicit
+2. **Extracted variable** - `description` is clearer than inline `or`
+3. **Named let bindings** - `link-start` and `link-end` instead of a list
+4. **Comments** - Each case labeled
+5. **Whitespace** - Blank lines separate the three cases
+
+Much easier to see the logic flow now, right?

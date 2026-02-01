@@ -1,0 +1,20 @@
+for copying and pasting into my .el file, i am a bit confused over this content.  Does it belong in a .el file?
+
+
+```elisp
+```
+
+## What you'll see in *Messages*:
+
+**For a single link:**
+```
+Replaced: [[https://example.com][Example Site]] → Example Site
+```
+
+**For multiple links in a region:**
+```
+Link 1: [[https://example.com][Example]] → Example
+Link 2: [[https://gnu.org][GNU]] → GNU  
+Link 3: [[https://emacs.org]] → https://emacs.org
+Replaced 3 links
+```

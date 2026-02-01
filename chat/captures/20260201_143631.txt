@@ -1,0 +1,44 @@
+Great question! Let me explain `atomic-change-group` in detail.
+
+## What it does
+
+`atomic-change-group` groups multiple buffer modifications into a single undo unit. Without it, if you undo after running your function, you might undo just the insertion or just the deletion separately, leaving your buffer in a weird intermediate state.
+
+## Implementation
+
+Here's your function with `atomic-change-group` added:
+
+```elisp
+(defun my/org-replace-link-by-link-description ()
+  "Replace an org link by its description or if empty its address"
+  (interactive)
+  (if (org-in-regexp org-link-bracket-re 1)
+      (save-excursion
+        (let ((remove (list (match-beginning 0) (match-end 0)))
+              (description
+               (if (match-end 2) 
+                   (org-match-string-no-properties 2)
+                 (org-match-string-no-properties 1))))
+          (atomic-change-group  ; Start atomic group
+            (apply 'delete-region remove)
+            (insert description))))  ; End atomic group - extra paren closes it
+    (message "Not on an org link")))
+```
+
+## Why it matters
+
+**Without `atomic-change-group`:**
+- You delete the link → this creates undo boundary #1
+- You insert the description → this creates undo boundary #2
+- Press `C-/` (undo) once → only the insertion is undone, leaving the link deleted
+- Press `C-/` again → the deletion is undone, restoring the link
+
+**With `atomic-change-group`:**
+- Both operations are treated as one
+- Press `C-/` once → both operations are undone together, restoring the original link
+
+## When to use it
+
+Use `atomic-change-group` whenever your function makes multiple related changes that should be undone/redone together. It's particularly important for user-facing interactive commands where the undo behavior matters.
+
+The overhead is negligible, so it's a good practice for any multi-step modification function.

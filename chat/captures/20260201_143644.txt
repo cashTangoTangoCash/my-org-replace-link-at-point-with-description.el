@@ -1,0 +1,1 @@
+why doesn't a single undo operation simply undo the call to my/org-replace-link-by-link-description?

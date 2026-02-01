@@ -1,0 +1,12 @@
+Excellent! That's `atomic-change-group` doing its job perfectly. 
+
+You're right that it works as one undo operation - I'm glad you tested it and confirmed the behavior!
+
+Just a small note: you mentioned using `C-x u` for undo. That works, but the more common Emacs undo bindings are:
+- `C-/` (most common)
+- `C-_` (alternative)
+- `C-x u` (what you used - also works!)
+
+All three do the same thing, but `C-/` is typically easiest to type.
+
+Sounds like the function is working exactly as intended! The atomic change group ensured all 3 link replacements were treated as a single undoable operation.
