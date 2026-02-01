@@ -1,0 +1,1 @@
+actually claude let's be a bit more careful.  Do you know what license the original code on Stack Exchange is published under?  Maybe I don't have the right to publish a modified version on github and choose MIT or GPLX or ?
