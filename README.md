@@ -1,0 +1,121 @@
+# org-replace-link-by-description
+
+An Emacs Lisp function to remove Org mode link markup while preserving the link text.
+
+## Overview
+
+This function allows you to quickly "unlink" Org mode links, replacing `[[URL][Description]]` with just `Description`, or `[[URL]]` with just `URL`. It works on both single links and multiple links in a region.
+
+## Features
+
+- **Single link unlinking**: Place cursor on any Org link and unlink it
+- **Batch unlinking**: Select a region containing multiple links to unlink them all at once
+- **Atomic undo**: All changes undo as a single operation
+- **Detailed feedback**: See before/after messages for each link replaced
+- **Smart fallback**: Uses URL when no description is present
+
+## Installation
+
+1. Copy the function from `org-replace-link.el` to your Emacs configuration file (e.g., `~/.emacs.d/init.el` or a separate `.el` file you load)
+
+2. Evaluate the code or restart Emacs
+
+3. (Optional) Bind to a key for quick access:
+
+```elisp
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-c C-u") 'my/org-replace-link-by-link-description))
+```
+
+## Usage
+
+### Single Link
+
+1. Place your cursor anywhere on an Org link
+2. Run `M-x my/org-replace-link-by-link-description`
+3. The link markup is removed, leaving only the description (or URL if no description exists)
+
+**Example:**
+
+```
+Before: Check out [[https://www.gnu.org/software/emacs/][GNU Emacs]]
+After:  Check out GNU Emacs
+```
+
+### Multiple Links
+
+1. Select a region containing one or more Org links
+2. Run `M-x my/org-replace-link-by-link-description`
+3. All links in the region are unlinked at once
+
+**Example:**
+
+```
+Before: 
+I use [[https://www.gnu.org/software/emacs/][Emacs]] and [[https://orgmode.org/][Org mode]] daily.
+Visit [[https://github.com]] for code.
+
+After:
+I use Emacs and Org mode daily.
+Visit https://github.com for code.
+```
+
+## Messages Output
+
+The function provides helpful feedback in the `*Messages*` buffer:
+
+**Single link:**
+```
+Replaced: [[https://example.com][Example Site]] → Example Site
+```
+
+**Multiple links:**
+```
+Link 1: [[https://example.com][Example]] → Example
+Link 2: [[https://gnu.org][GNU]] → GNU  
+Link 3: [[https://emacs.org]] → https://emacs.org
+Replaced 3 links
+```
+
+## Requirements
+
+- Emacs 24.4 or later
+- Org mode (tested with Org 9.3+, should work with earlier versions)
+
+## Compatibility
+
+This function uses `org-link-bracket-re`, which is the standard link regexp in Org mode 9.3+ (released in 2019). It should work with Emacs 30.2 and all recent versions.
+
+For Org mode versions prior to 9.3, the older variable name `org-bracket-link-regexp` was used, but it now serves as an alias to `org-link-bracket-re`.
+
+## Technical Details
+
+- Uses `atomic-change-group` to ensure all modifications undo as a single operation
+- Preserves point position with `save-excursion`
+- Handles both `[[URL][Description]]` and `[[URL]]` link formats
+- Works with any valid Org link type (http, file, id, etc.)
+
+## Credits
+
+Original concept and code is given in [this Stack Exchange answer](https://emacs.stackexchange.com/questions/10707/in-org-mode-how-to-remove-a-link).
+
+Enhanced with:
+- Region support for batch operations
+- Atomic undo grouping
+- User feedback messages
+- Improved code readability
+
+## License
+
+please see LICENSE file
+
+CC BY-SA
+
+## How it was Developed
+
+This script was built through an iterative dialogue with Claude. For a
+detailed look at the logic, the alternative approaches considered, and
+the evolution of the code, check the contents of the gemini-chat/
+folder in this repository.
+
+
