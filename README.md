@@ -115,7 +115,5 @@ CC BY-SA
 
 This script was built through an iterative dialogue with Claude. For a
 detailed look at the logic, the alternative approaches considered, and
-the evolution of the code, check the contents of the gemini-chat/
+the evolution of the code, check the contents of the chat/
 folder in this repository.
-
-
